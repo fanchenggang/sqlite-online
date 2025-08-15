@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => {
   const isPages = mode === 'pages';
 
   return {
-    base: isPages ? "/sqlite-online/" : "/",
+    base: isPages ? "/sqlite-online/" : "/dist",
     plugins: [
       react({
         babel: {

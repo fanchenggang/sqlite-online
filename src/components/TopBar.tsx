@@ -63,7 +63,7 @@ function TopBar() {
         aria-label="Application settings and links"
       >
         <a
-          href="https://github.com/vwh/sqlite-online"
+          href="https://freedrg.com"
           target="_blank"
           rel="noopener noreferrer"
           className="focus:ring-ring rounded-md transition-opacity hover:opacity-80 focus:ring-2 focus:ring-offset-2 focus:outline-none"

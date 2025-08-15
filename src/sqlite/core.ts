@@ -99,7 +99,7 @@ export default class Sqlite {
     // const result: SqlValue[] = stmt.get();
     // stmt.free();
 
-    const result = this.execFetch(query,"", params);
+    const result = this.execFetch(query,"QUERY", params);
     // if (JSON.stringify(result) !== JSON.stringify(result2)) {
     //   console.log("sql:", query, result, result2);
     // }
@@ -520,7 +520,6 @@ function buildWhereClause(filters?: Filters): {
 
   const conditions: string[] = [];
   const params: string[] = [];
-
   Object.entries(filters).forEach(([column, value]) => {
     const quotedColumn = sanitizeColumnName(column);
     conditions.push(`${quotedColumn} LIKE ? ESCAPE '\\'`);
