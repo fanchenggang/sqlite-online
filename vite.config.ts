@@ -41,10 +41,17 @@ export default defineConfig(({ mode }) => {
       }
     },
     server: {
-      fs: {
-        allow: [path.resolve(__dirname), path.resolve(__dirname, "..")],
-        strict: false
-      }
+      proxy:{
+        '/api': {
+          target: 'http://localhost:86',
+          changeOrigin: true,
+          //rewrite: (path) => path.replace(/^\/api/, '')
+        }
+      },
+      // fs: {
+      //   allow: [path.resolve(__dirname), path.resolve(__dirname, "..")],
+      //   strict: false
+      // }
     }
   };
 })

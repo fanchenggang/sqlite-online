@@ -1,4 +1,4 @@
-import type { Database, QueryExecResult, SqlJsStatic, SqlValue } from "sql.js";
+import type {  QueryExecResult, SqlValue } from "sql.js";
 // import initSqlJs from "sql.js";
 //
 // import DEMO_DB from "./demo-db";
@@ -10,7 +10,6 @@ import type {
   TableSchema,
   TableSchemaRow
 } from "@/types";
-import showToast from "@/components/common/Toaster/Toast.tsx";
 
 export default class Sqlite {
   // Static SQL.js instance
@@ -133,7 +132,7 @@ export default class Sqlite {
 
   public execFetch(sql: string, type: string, params: SqlValue[]) {
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://127.0.0.1:82/api/db", false);
+    xhr.open("POST", "/api/db", false);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(
       JSON.stringify({
@@ -157,16 +156,7 @@ export default class Sqlite {
   // Used for downloading the database
   public download() {
    // return this.db.export();
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://127.0.0.1:82/api/download", false);
-    xhr.responseType = "arraybuffer";
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send();
-    if (xhr.status === 200) {
-      return new Uint8Array(xhr.response);
-    } else {
-      throw new Error(`Request failed with status ${xhr.status}`);
-    }
+
   }
 
   // Get the information of a table

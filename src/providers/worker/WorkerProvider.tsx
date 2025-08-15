@@ -196,12 +196,12 @@ const DatabaseWorkerProvider = ({ children }: DatabaseWorkerProviderProps) => {
       }
       // When the database is downloaded
       else if (action === "downloadComplete") {
-        const { payload } = workerEvent;
+       // const { payload } = workerEvent;
 
-        const blob = new Blob([payload.bytes], {
-          type: "application/octet-stream"
-        });
-        const url = URL.createObjectURL(blob);
+        // const blob = new Blob([payload.bytes], {
+        //   type: "application/octet-stream"
+        // });
+        const url = "/api/download"
         const link = document.createElement("a");
         link.href = url;
         link.download = "database.db";

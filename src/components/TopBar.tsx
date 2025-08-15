@@ -53,7 +53,7 @@ function TopBar() {
           aria-label="Save current database to file"
         >
           <SaveIcon className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
-          Save Database
+          Export Database
         </Button>
       </div>
 

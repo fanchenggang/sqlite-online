@@ -21,7 +21,7 @@ interface ActionButtonsProps {
 
 function handleRefresh(table: string|null) {
   const xhr = new XMLHttpRequest();
-  xhr.open("POST", "http://127.0.0.1:82/api/refresh", false);
+  xhr.open("POST", "/api/refresh", false);
   xhr.setRequestHeader("Content-Type", "application/json");
   xhr.send(
     JSON.stringify({

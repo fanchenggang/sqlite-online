@@ -9,16 +9,17 @@ let instance: Sqlite | null = null;
 // Cleanup function to properly dispose of resources
 function cleanup() {
   if (instance) {
-    try {
-      // Close database connection if available
-      if (instance.db && typeof instance.db.close === "function") {
-        instance.db.close();
-      }
-    } catch (error) {
-      console.warn("Error during database cleanup:", error);
-    } finally {
-      instance = null;
-    }
+    // try {
+    //   // Close database connection if available
+    //   if (instance.db && typeof instance.db.close === "function") {
+    //     instance.db.close();
+    //   }
+    // } catch (error) {
+    //   console.warn("Error during database cleanup:", error);
+    // } finally {
+    //   instance = null;
+    // }
+    instance = null;
   }
 }
 
@@ -251,12 +252,12 @@ self.onmessage = async (event: MessageEvent<WorkerEvent>) => {
       }
       // Downloads the database as bytes
       case "download": {
-        const bytes = instance.download();
+       // const bytes = instance.download();
 
         // Send the download(bytes) response to the main thread
         self.postMessage({
           action: "downloadComplete",
-          payload: { bytes }
+         // payload: { bytes }
         });
 
         break;
