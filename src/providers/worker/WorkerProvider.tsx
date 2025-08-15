@@ -204,7 +204,7 @@ const DatabaseWorkerProvider = ({ children }: DatabaseWorkerProviderProps) => {
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = "database.sqlite";
+        link.download = "database.db";
         link.click();
 
         showToast("Database downloaded successfully", "success");

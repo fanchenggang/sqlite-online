@@ -86,21 +86,21 @@ self.onmessage = async (event: MessageEvent<WorkerEvent>) => {
         // Clean up existing instance first
         cleanup();
 
-        instance = await Sqlite.open(new Uint8Array(payload.file));
-
-        if (instance.firstTable === null) {
-          throw new Error("Database is empty");
-        }
-
-        // Send the initialization response to the main thread
-        self.postMessage({
-          action: "initComplete",
-          payload: {
-            tableSchema: instance.tablesSchema,
-            indexSchema: instance.indexesSchema,
-            currentTable: instance.firstTable
-          }
-        });
+        // instance = await Sqlite.open(new Uint8Array(payload.file));
+        //
+        // if (instance.firstTable === null) {
+        //   throw new Error("Database is empty");
+        // }
+        //
+        // // Send the initialization response to the main thread
+        // self.postMessage({
+        //   action: "initComplete",
+        //   payload: {
+        //     tableSchema: instance.tablesSchema,
+        //     indexSchema: instance.indexesSchema,
+        //     currentTable: instance.firstTable
+        //   }
+        // });
 
         break;
       }
