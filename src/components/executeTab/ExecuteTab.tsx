@@ -21,7 +21,7 @@ import {
   LoaderCircleIcon,
   XIcon,
   FolderOutputIcon,
-  SparklesIcon
+  // SparklesIcon
 } from "lucide-react";
 
 function ExecuteTab() {
@@ -58,9 +58,9 @@ function ExecuteTab() {
     setErrorMessage(null);
   }, [setErrorMessage]);
 
-  const handleApiKeyModalOpen = () => {
-    setIsApiKeyModalOpen(true);
-  };
+  // const handleApiKeyModalOpen = () => {
+  //   setIsApiKeyModalOpen(true);
+  // };
 
   return (
     <div className="flex h-full flex-col">
@@ -91,15 +91,15 @@ function ExecuteTab() {
           <FolderOutputIcon className="mr-1 h-3 w-3" />
           Export data
         </Button>
-        <Button
-          size="sm"
-          variant="outline"
-          className="text-xs"
-          onClick={handleApiKeyModalOpen}
-        >
-          <SparklesIcon className="mr-1 h-3 w-3" />
-          Gemini
-        </Button>
+        {/*<Button*/}
+        {/*  size="sm"*/}
+        {/*  variant="outline"*/}
+        {/*  className="text-xs"*/}
+        {/*  onClick={handleApiKeyModalOpen}*/}
+        {/*>*/}
+        {/*  <SparklesIcon className="mr-1 h-3 w-3" />*/}
+        {/*  Gemini*/}
+        {/*</Button>*/}
         {(isDataLoading || isDatabaseLoading) && (
           <span className="ml-2 flex items-center text-xs text-gray-500">
             <LoaderCircleIcon className="mr-1 h-3 w-3 animate-spin" />

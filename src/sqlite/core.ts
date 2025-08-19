@@ -1,9 +1,8 @@
-import initSqlJs from "sql.js";
-
-import DEMO_DB from "./demo-db";
+import type {  QueryExecResult, SqlValue } from "sql.js";
+// import initSqlJs from "sql.js";
+//
+// import DEMO_DB from "./demo-db";
 import { tableDataCache } from "@/lib/queryCache";
-
-import type { Database, SqlJsStatic, SqlValue, QueryExecResult } from "sql.js";
 import type {
   Filters,
   IndexSchema,
@@ -14,60 +13,71 @@ import type {
 
 export default class Sqlite {
   // Static SQL.js instance
-  static readonly sqlJsStatic?: SqlJsStatic;
+  // static readonly sqlJsStatic?: SqlJsStatic;
   // Database instance
-  public readonly db: Database;
+  // public readonly db: Database;
 
   public firstTable: string | null = null;
   public tablesSchema: TableSchema = {};
   public indexesSchema: IndexSchema[] = [];
 
-  private constructor(db: Database, isFile = false) {
-    this.db = db;
-    // Check if user is opening a file or creating a new database.
-    if (!isFile) {
-      // The demo database
-      this.db.exec(DEMO_DB);
-    }
+  // private constructor(db: Database, isFile = false) {
+  //   this.db = db;
+  //   // Check if user is opening a file or creating a new database.
+  //   if (!isFile) {
+  //     //  The demo database
+  //     this.db.exec(DEMO_DB);
+  //   }
+  //   this.getDatabaseSchema();
+  // }
+
+  private constructor() {
     this.getDatabaseSchema();
   }
 
   // Initialize SQL.js
 
-  private static async initSQLjs(): Promise<SqlJsStatic> {
-    if (Sqlite.sqlJsStatic) return Sqlite.sqlJsStatic;
-    try {
-      const SQL = await initSqlJs({
-        locateFile: (file) => `${import.meta.env.BASE_URL}wasm/${file}`
-      });
-      return SQL;
-    } catch (error) {
-      console.error("Core: Failed to initialize SQL.js:", error);
-      throw new Error(
-        `Failed to initialize SQL.js: ${error instanceof Error ? error.message : String(error)}`
-      );
-    }
-  }
+  // private static async initSQLjs(): Promise<SqlJsStatic> {
+  //   if (Sqlite.sqlJsStatic) return Sqlite.sqlJsStatic;
+  //   try {
+  //     const SQL = await initSqlJs({
+  //       locateFile: (file) => `${import.meta.env.BASE_URL}wasm/${file}`
+  //     });
+  //     return SQL;
+  //   } catch (error) {
+  //     console.error("Core: Failed to initialize SQL.js:", error);
+  //     throw new Error(
+  //       `Failed to initialize SQL.js: ${error instanceof Error ? error.message : String(error)}`
+  //     );
+  //   }
+  // }
 
   // Initialize a new database
   public static async create(): Promise<Sqlite> {
-    const SQL = await Sqlite.initSQLjs();
-    const db = new SQL.Database();
-    return new Sqlite(db, false);
+    // const SQL = await Sqlite.initSQLjs();
+    // const db = new SQL.Database();
+    // return new Sqlite(db, false);
+    return new Sqlite();
   }
 
   // Initialize a new database from a file
-  public static async open(file: Uint8Array): Promise<Sqlite> {
-    const SQL = await Sqlite.initSQLjs();
-    const db = new SQL.Database(file);
-    return new Sqlite(db, true);
-  }
+  //public static async open(): Promise<Sqlite> {
+    // const SQL = await Sqlite.initSQLjs();
+    // const db = new SQL.Database(file);
+    // return new Sqlite(db, true);
+  //}
 
   // Execute a SQL statement
   public exec(sql: string) {
     sql = sql.replace(/COLLATE\s+unicase/gi, "COLLATE NOCASE");
 
-    const results = this.db.exec(sql);
+    //const results = this.db.exec(sql);
+    const results = this.execFetch(sql,"QUERY", []);
+
+    // if (JSON.stringify(results) !== JSON.stringify(results2)) {
+    //   console.log("sql:", sql, results, results2);
+    // }
+
     const upperSql = sql.toUpperCase();
     // If the statement requires schema updates
     let doTablesChanged = false;
@@ -81,10 +91,72 @@ export default class Sqlite {
     return [results, doTablesChanged] as const;
   }
 
+  // Execute a SQL statement
+  public prepare(query: string, params: string[]): SqlValue[] {
+    // const stmt = this.db.prepare(query);
+    // stmt.bind(params);
+    // stmt.step();
+    // const result: SqlValue[] = stmt.get();
+    // stmt.free();
+
+    const result = this.execFetch(query,"QUERY", params);
+    // if (JSON.stringify(result) !== JSON.stringify(result2)) {
+    //   console.log("sql:", query, result, result2);
+    // }
+    return result;
+  }
+
+  public prepare2(query: string, params: string[]) {
+    // const stmt = this.db.prepare(query);
+    // stmt.bind(params);
+    // const values: SqlValue[][] = [];
+    // while (stmt.step()) {
+    //   values.push(stmt.get());
+    // }
+    // const results = [{ columns: stmt.getColumnNames(), values }];
+    // stmt.free();
+
+    const results2 = this.execFetch(query,"QUERY", params);
+    // if (JSON.stringify(results) !== JSON.stringify(results2)) {
+    //   console.log("sql:", query, results, results2);
+    // }
+    return results2;
+  }
+
+  public execUpdate(query: string, type: string, params: SqlValue[]) {
+    // const stmt = this.db.prepare(query);
+    // stmt.run(params); // Primary key is the last parameter
+    // stmt.free();
+    this.execFetch(query,type, params);
+  }
+
+  public execFetch(sql: string, type: string, params: SqlValue[]) {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/db", false);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(
+      JSON.stringify({
+        type: type,
+        sql: sql,
+        params: params
+      })
+    );
+    if (xhr.status === 200) {
+      const resp = JSON.parse(xhr.responseText);
+      if (resp.code!==1){
+        throw new Error(`${resp.msg}`);
+      }
+      return resp.data;
+    } else {
+      throw new Error(`Request failed with status ${xhr.status}`);
+    }
+  }
+
   // Return the database as bytes
   // Used for downloading the database
   public download() {
-    return this.db.export();
+   // return this.db.export();
+
   }
 
   // Get the information of a table
@@ -169,14 +241,16 @@ export default class Sqlite {
     const { clause, params } = buildWhereClause(filters);
     const quotedTableName = sanitizeColumnName(tableName);
 
-    const query = `SELECT COUNT(*) FROM ${quotedTableName} ${clause}`;
+    const query = `SELECT COUNT(*)
+                   FROM ${quotedTableName} ${clause}`;
 
     if (params.length > 0) {
-      const stmt = this.db.prepare(query);
-      stmt.bind(params);
-      stmt.step();
-      const result = stmt.get();
-      stmt.free();
+      // const stmt = this.db.prepare(query);
+      // stmt.bind(params);
+      // stmt.step();
+      // const result = stmt.get();
+      // stmt.free();
+      const result = this.prepare(query, params);
       return Math.ceil((result as SqlValue[])[0] as number);
     } else {
       const [results] = this.exec(query);
@@ -224,22 +298,15 @@ export default class Sqlite {
     const orderByClause = buildOrderByClause(sorters);
 
     const query = `
-      SELECT ${selectClause} FROM ${quotedTable}
-      ${whereClause}
-      ${orderByClause}
-      LIMIT ${safeLimit} OFFSET ${safeOffset}
+      SELECT ${selectClause}
+      FROM ${quotedTable} ${whereClause} ${orderByClause}
+      LIMIT ${safeLimit}
+      OFFSET ${safeOffset}
     `;
 
     let results;
     if (params.length > 0) {
-      const stmt = this.db.prepare(query);
-      stmt.bind(params);
-      const values: SqlValue[][] = [];
-      while (stmt.step()) {
-        values.push(stmt.get());
-      }
-      results = [{ columns: stmt.getColumnNames(), values }];
-      stmt.free();
+      results = this.prepare2(query, params);
     } else {
       [results] = this.exec(query);
     }
@@ -285,15 +352,15 @@ export default class Sqlite {
       const setClause = columns.map((column) => `"${column}" = ?`).join(", ");
 
       // The WHERE clause is based on the primary key
-      const query = `UPDATE "${table}" SET ${setClause} WHERE "${primaryKey}" = ?`;
+      const query = `UPDATE "${table}"
+                     SET ${setClause}
+                     WHERE "${primaryKey}" = ?`;
 
       // Update values make '' -> NULL
       values = values.map((value) => (value === "" ? null : value));
 
       // Prepare and execute the query
-      const stmt = this.db.prepare(query);
-      stmt.run([...values, id]); // Primary key is the last parameter
-      stmt.free();
+      this.execUpdate(query,"UPDATE", [...values, id]);
 
       // Invalidate cache for this table
       tableDataCache.invalidateTable(table);
@@ -318,11 +385,11 @@ export default class Sqlite {
         );
       }
 
-      const query = `DELETE FROM "${table}" WHERE "${primaryKey}" = ?`;
+      const query = `DELETE
+                     FROM "${table}"
+                     WHERE "${primaryKey}" = ?`;
 
-      const stmt = this.db.prepare(query);
-      stmt.run([id]);
-      stmt.free();
+      this.execUpdate(query,"DELETE", [id]);
 
       // Invalidate cache for this table
       tableDataCache.invalidateTable(table);
@@ -353,11 +420,13 @@ export default class Sqlite {
       const filteredColumns = filteredEntries.map((entry) => entry.col);
       const filteredValues = filteredEntries.map((entry) => entry.val);
 
-      const query = `INSERT INTO "${table}" (${filteredColumns.join(", ")}) VALUES (${filteredColumns.map(() => "?").join(", ")})`;
+      const query = `INSERT INTO "${table}" (${filteredColumns.join(", ")})
+                     VALUES (${filteredColumns.map(() => "?").join(", ")})`;
 
-      const stmt = this.db.prepare(query);
-      stmt.run([...filteredValues]);
-      stmt.free();
+      // const stmt = this.db.prepare(query);
+      // stmt.run([...filteredValues]);
+      // stmt.free();
+      this.execUpdate(query,"INSERT", [...filteredValues]);
 
       // Invalidate cache for this table
       tableDataCache.invalidateTable(table);
@@ -395,7 +464,8 @@ export default class Sqlite {
     const { clause: whereClause, params } = buildWhereClause(filters);
     const orderByClause = buildOrderByClause(sorters);
 
-    let query = `SELECT * FROM ${quotedTable} ${whereClause} ${orderByClause}`;
+    let query = `SELECT *
+                 FROM ${quotedTable} ${whereClause} ${orderByClause}`;
 
     if (offset && limit) {
       const safeLimit = Math.max(
@@ -407,15 +477,16 @@ export default class Sqlite {
     }
 
     if (params.length > 0) {
-      const stmt = this.db.prepare(query);
-      stmt.bind(params);
-      const values: SqlValue[][] = [];
-      while (stmt.step()) {
-        values.push(stmt.get());
-      }
-      const results = [{ columns: stmt.getColumnNames(), values }];
-      stmt.free();
-      return results;
+      // const stmt = this.db.prepare(query);
+      // stmt.bind(params);
+      // const values: SqlValue[][] = [];
+      // while (stmt.step()) {
+      //   values.push(stmt.get());
+      // }
+      // const results = [{ columns: stmt.getColumnNames(), values }];
+      // stmt.free();
+      // return results;
+      return this.prepare2(query, params);
     } else {
       const [results] = this.exec(query);
       return results;
@@ -449,7 +520,6 @@ function buildWhereClause(filters?: Filters): {
 
   const conditions: string[] = [];
   const params: string[] = [];
-
   Object.entries(filters).forEach(([column, value]) => {
     const quotedColumn = sanitizeColumnName(column);
     conditions.push(`${quotedColumn} LIKE ? ESCAPE '\\'`);

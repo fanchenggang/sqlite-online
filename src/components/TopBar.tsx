@@ -1,14 +1,13 @@
 import useDatabaseWorker from "@/hooks/useWorker";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import ModeToggle from "@/components/theme/ModeToggle";
 import HighContrastToggle from "@/components/accessibility/HighContrastToggle";
 
-import { DatabaseIcon, SaveIcon, GithubIcon } from "lucide-react";
+import {  SaveIcon, GithubIcon } from "lucide-react";
 
 function TopBar() {
-  const { handleFileChange, handleDownload } = useDatabaseWorker();
+  const {  handleDownload } = useDatabaseWorker();
 
   return (
     <header
@@ -20,32 +19,32 @@ function TopBar() {
         role="group"
         aria-label="Database file operations"
       >
-        <label
-          htmlFor="file-upload"
-          className="focus-within:ring-ring relative cursor-pointer rounded-md transition-opacity focus-within:ring-2 focus-within:ring-offset-2 hover:opacity-80"
-        >
-          <Input
-            id="file-upload"
-            type="file"
-            accept=".db,.sqlite,.sqlite3"
-            className="absolute inset-0 cursor-pointer opacity-0"
-            onChange={handleFileChange}
-            aria-describedby="file-upload-description"
-          />
-          <span id="file-upload-description" className="sr-only">
-            Select a SQLite database file to open (.db, .sqlite, .sqlite3)
-          </span>
-          <Button
-            size="sm"
-            variant="outline"
-            className="border-foreground/25 pointer-events-none h-8 cursor-pointer px-3 text-xs font-medium sm:w-[200px]"
-            aria-hidden="true"
-            tabIndex={-1}
-          >
-            <DatabaseIcon className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
-            Open Database
-          </Button>
-        </label>
+        {/*<label*/}
+        {/*  htmlFor="file-upload"*/}
+        {/*  className="focus-within:ring-ring relative cursor-pointer rounded-md transition-opacity focus-within:ring-2 focus-within:ring-offset-2 hover:opacity-80"*/}
+        {/*>*/}
+        {/*  <Input*/}
+        {/*    id="file-upload"*/}
+        {/*    type="file"*/}
+        {/*    accept=".db,.sqlite,.sqlite3"*/}
+        {/*    className="absolute inset-0 cursor-pointer opacity-0"*/}
+        {/*    onChange={handleFileChange}*/}
+        {/*    aria-describedby="file-upload-description"*/}
+        {/*  />*/}
+        {/*  <span id="file-upload-description" className="sr-only">*/}
+        {/*    Select a SQLite database file to open (.db, .sqlite, .sqlite3)*/}
+        {/*  </span>*/}
+        {/*  <Button*/}
+        {/*    size="sm"*/}
+        {/*    variant="outline"*/}
+        {/*    className="border-foreground/25 pointer-events-none h-8 cursor-pointer px-3 text-xs font-medium sm:w-[200px]"*/}
+        {/*    aria-hidden="true"*/}
+        {/*    tabIndex={-1}*/}
+        {/*  >*/}
+        {/*    <DatabaseIcon className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />*/}
+        {/*    Open Database*/}
+        {/*  </Button>*/}
+        {/*</label>*/}
         <Button
           size="sm"
           variant="outline"
@@ -54,7 +53,7 @@ function TopBar() {
           aria-label="Save current database to file"
         >
           <SaveIcon className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
-          Save Database
+          Export Database
         </Button>
       </div>
 
@@ -64,7 +63,7 @@ function TopBar() {
         aria-label="Application settings and links"
       >
         <a
-          href="https://github.com/vwh/sqlite-online"
+          href="https://freedrg.com"
           target="_blank"
           rel="noopener noreferrer"
           className="focus:ring-ring rounded-md transition-opacity hover:opacity-80 focus:ring-2 focus:ring-offset-2 focus:outline-none"
