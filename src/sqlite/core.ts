@@ -138,8 +138,9 @@ export default class Sqlite {
 
   public execFetch(sql: string, type: string, params: SqlValue[]) {
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/api/db", false);
+    xhr.open("POST", "http://127.0.0.1:8787/rest", false);
     xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("Authorization", "Bearer chenjie@2025");
     xhr.send(
       JSON.stringify({
         type: type,
@@ -214,7 +215,7 @@ export default class Sqlite {
     this.firstTable = null;
 
     const [results] = this.exec(
-      "SELECT type, name, tbl_name FROM sqlite_master WHERE name NOT LIKE 'sqlite_%'"
+      "SELECT type, name, tbl_name FROM sqlite_master WHERE name NOT LIKE 'sqlite_%' and name<>'_cf_METADATA'"
     );
 
     if (results.length === 0) return;

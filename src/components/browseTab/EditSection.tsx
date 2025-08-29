@@ -86,6 +86,7 @@ function EditSection() {
               <Textarea
                 id={column}
                 name={column}
+                // disabled={column === "DRG编码"}
                 className="border-primary/20 focus:ring-primary/30 focus:border-primary/40 rounded border text-sm text-[0.8rem]! focus:ring-1"
                 value={editValues[index] || ""}
                 onChange={(e) => handleEditInputChange(index, e.target.value)}
