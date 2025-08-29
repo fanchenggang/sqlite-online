@@ -1,5 +1,5 @@
-import { QueryExecResult } from "sql.js";
-import Sqlite, { CustomQueryError, arrayToCSV } from "./core";
+// import { QueryExecResult } from "sql.js";
+import Sqlite, {QueryExecResult, CustomQueryError, arrayToCSV } from "./core";
 
 import type { WorkerEvent } from "@/types";
 

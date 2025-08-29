@@ -1,4 +1,4 @@
-import type {  QueryExecResult, SqlValue } from "sql.js";
+//import type {  QueryExecResult, SqlValue } from "sql.js";
 // import initSqlJs from "sql.js";
 //
 // import DEMO_DB from "./demo-db";
@@ -10,6 +10,13 @@ import type {
   TableSchema,
   TableSchemaRow
 } from "@/types";
+
+export type SqlValue = number | string | Uint8Array | null;
+
+export class QueryExecResult {
+  columns: string[] = [];
+  values: SqlValue[][] = [];
+}
 
 export default class Sqlite {
   // Static SQL.js instance
@@ -92,18 +99,17 @@ export default class Sqlite {
   }
 
   // Execute a SQL statement
-  public prepare(query: string, params: string[]): SqlValue[] {
+  public prepare(query: string, params: string[]): QueryExecResult[] {
     // const stmt = this.db.prepare(query);
     // stmt.bind(params);
     // stmt.step();
     // const result: SqlValue[] = stmt.get();
     // stmt.free();
 
-    const result = this.execFetch(query,"QUERY", params);
     // if (JSON.stringify(result) !== JSON.stringify(result2)) {
     //   console.log("sql:", query, result, result2);
     // }
-    return result;
+    return this.execFetch(query,"QUERY", params);
   }
 
   public prepare2(query: string, params: string[]) {
@@ -250,8 +256,8 @@ export default class Sqlite {
       // stmt.step();
       // const result = stmt.get();
       // stmt.free();
-      const result = this.prepare(query, params);
-      return Math.ceil((result as SqlValue[])[0] as number);
+      const results = this.prepare(query, params);
+      return Math.ceil(results[0].values[0][0] as number);
     } else {
       const [results] = this.exec(query);
       if (results.length === 0) return 0;
