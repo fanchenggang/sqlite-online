@@ -20,27 +20,29 @@ interface ActionButtonsProps {
 }
 
 function handleRefresh(table: string|null) {
-  const xhr = new XMLHttpRequest();
-  xhr.open("POST", "/api/refresh", false);
-  xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.send(
-    JSON.stringify({
-      type: "REFRESH",
-      sql: table,
-      params: []
-    })
-  );
-  if (xhr.status === 200) {
-    const resp = JSON.parse(xhr.responseText);
-    showToast("Refresh api successfully", "success");
-    if (resp.code!==1){
-      showToast("Refresh api failed", resp.msg);
-      throw new Error(`${resp.msg}`);
-    }
-    return resp.data;
-  } else {
-    throw new Error(`Request failed with status ${xhr.status}`);
-  }
+  // const xhr = new XMLHttpRequest();
+  // xhr.open("POST", "/api/refresh", false);
+  // xhr.setRequestHeader("Content-Type", "application/json");
+  // xhr.send(
+  //   JSON.stringify({
+  //     type: "REFRESH",
+  //     sql: table,
+  //     params: []
+  //   })
+  // );
+  // if (xhr.status === 200) {
+  //   const resp = JSON.parse(xhr.responseText);
+  //   showToast("Refresh api successfully", "success");
+  //   if (resp.code!==1){
+  //     showToast("Refresh api failed", resp.msg);
+  //     throw new Error(`${resp.msg}`);
+  //   }
+  //   return resp.data;
+  // } else {
+  //   throw new Error(`Request failed with status ${xhr.status}`);
+  // }
+  console.log(table)
+  location.reload();
 }
 
 function ActionButtons({ filters, sorters }: Readonly<ActionButtonsProps>) {
@@ -112,7 +114,7 @@ function ActionButtons({ filters, sorters }: Readonly<ActionButtonsProps>) {
           aria-label="Export entire table as CSV file"
         >
           <FolderOutputIcon className="mr-1 h-3 w-3" aria-hidden="true" />
-          Export table
+          导出表
         </Button>
 
         <Button
@@ -123,7 +125,7 @@ function ActionButtons({ filters, sorters }: Readonly<ActionButtonsProps>) {
           aria-label="Export entire table as CSV file"
         >
           <RotateCwIcon className="mr-1 h-3 w-3" aria-hidden="true" />
-          Refresh api
+          刷新
         </Button>
       </div>
       <div className="md:hidden">

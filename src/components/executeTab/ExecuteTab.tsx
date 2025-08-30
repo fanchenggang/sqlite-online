@@ -89,7 +89,7 @@ function ExecuteTab() {
           disabled={!customQueryObject?.data}
         >
           <FolderOutputIcon className="mr-1 h-3 w-3" />
-          Export data
+          导出数据
         </Button>
         {/*<Button*/}
         {/*  size="sm"*/}

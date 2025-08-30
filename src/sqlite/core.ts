@@ -542,7 +542,7 @@ function buildWhereClause(filters?: Filters): {
 
 // Build the ORDER BY clause for a SQL statement
 function buildOrderByClause(sorters?: Sorters): string {
-  if (!sorters) return "";
+  if (!sorters) return "order by 分组时间 desc";
 
   const sortersArray = Object.entries(sorters).map(([column, order]) => {
     const quotedColumn = sanitizeColumnName(column);

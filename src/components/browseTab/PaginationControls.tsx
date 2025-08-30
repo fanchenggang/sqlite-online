@@ -121,7 +121,7 @@ function PaginationControls() {
           aria-describedby={isView ? "insert-disabled-reason" : undefined}
         >
           <PlusIcon className="mr-2 h-3.5 w-3.5" aria-hidden="true" />
-          Insert row
+          开始分组
         </Button>
         {isView && (
           <span id="insert-disabled-reason" className="sr-only">
@@ -136,7 +136,7 @@ function PaginationControls() {
           aria-label="Export current table data as CSV file"
         >
           <FolderOutputIcon className="mr-2 h-3.5 w-3.5" aria-hidden="true" />
-          Export data
+          导出数据
         </Button>
       </section>
     </footer>

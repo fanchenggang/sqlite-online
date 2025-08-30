@@ -83,7 +83,7 @@ function ActionsDropdown({
             title="Insert a new row"
           >
             <PlusIcon className="mr-1 h-3 w-3" />
-            Insert row
+            开始分组
           </Button>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
@@ -95,7 +95,7 @@ function ActionsDropdown({
             title="Export the current table as CSV"
           >
             <FolderOutputIcon className="mr-1 h-3 w-3" />
-            Export table
+            导出表
           </Button>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
@@ -107,7 +107,7 @@ function ActionsDropdown({
             title="Export the current data as CSV"
           >
             <FolderOutputIcon className="mr-1 h-3 w-3" />
-            Export data
+            导出数据
           </Button>
         </DropdownMenuItem>
       </DropdownMenuContent>

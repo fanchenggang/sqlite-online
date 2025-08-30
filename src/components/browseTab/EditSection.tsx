@@ -53,6 +53,18 @@ function EditSection() {
 
     const schema = tablesSchema[currentTable]?.schema;
 
+    const FieldMap: Record<string, { comment: string; default: string }> = {
+      "性别": { comment: "男/女", default: "" },
+      "年龄": { comment: "年龄", default: "" },
+      "年龄(天)": { comment: "不足一周岁年龄(天)", default: "" },
+      "出生体重(克)": { comment: "新生儿出生体重(克)", default: "" },
+      "诊断编码": { comment: "医保2.0诊断编码多个以,号隔开", default: "" },
+      "手术及操作编码": { comment: "医保2.0手术及操作编码多个以,号隔开", default: "" },
+      "DRG编码": { comment: "", default: "" },
+      // "DRG名称": { comment: "", default: "" },
+      "分组时间": { comment: "", default: "" },
+      "IP": { comment: "IP", default: "" }
+    };
     return columns.map((column, index) => {
       const columnSchema = schema[index];
       const placeholder = columnSchema?.dflt_value || "Null";
@@ -76,7 +88,7 @@ function EditSection() {
               </div>
               {columnSchema.IsNullable && (
                 <span className="text-primary/50 bg-primary/5 rounded-full px-2 py-0.5 text-xs">
-                  Nullable
+                  {FieldMap[column]?.comment || "Nullable"}
                 </span>
               )}
             </div>
@@ -86,7 +98,10 @@ function EditSection() {
               <Textarea
                 id={column}
                 name={column}
-                // disabled={column === "DRG编码"}
+                disabled={
+                  ["DRG编码", "DRG名称", "分组时间", "IP"].indexOf(column) !==
+                  -1
+                }
                 className="border-primary/20 focus:ring-primary/30 focus:border-primary/40 rounded border text-sm text-[0.8rem]! focus:ring-1"
                 value={editValues[index] || ""}
                 onChange={(e) => handleEditInputChange(index, e.target.value)}
@@ -97,6 +112,7 @@ function EditSection() {
                 id={column}
                 name={column}
                 type={inputType}
+                disabled={["ID"].indexOf(column) !== -1}
                 className="border-primary/20 focus:ring-primary/30 focus:border-primary/40 h-9 rounded border text-[0.8rem]! focus:ring-1"
                 value={editValues[index] || ""}
                 onChange={(e) => handleEditInputChange(index, e.target.value)}
@@ -123,12 +139,12 @@ function EditSection() {
           {isInserting ? (
             <>
               <PlusIcon className="mr-2 h-3.5 w-3.5" />
-              Insert row
+                提交分组
             </>
           ) : (
             <>
               <SquarePenIcon className="mr-2 h-3.5 w-3.5" />
-              Apply changes
+              提交分组
             </>
           )}
         </Button>
@@ -159,7 +175,7 @@ function EditSection() {
                 <PlusIcon className="h-4 w-4" />
               </div>
               <Span className="text-sm font-medium whitespace-nowrap">
-                Inserting new row
+                分组信息
               </Span>
             </>
           ) : (
@@ -182,7 +198,7 @@ function EditSection() {
           aria-label="Go back to data"
         >
           <ChevronLeftIcon className="mr-1 h-3 w-3" />
-          Back
+          取消
         </Button>
       </div>
     ),
