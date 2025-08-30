@@ -129,14 +129,14 @@ export default class Sqlite {
     return results2;
   }
 
-  public execUpdate(query: string, type: string, params: SqlValue[]) {
+  public execUpdate(query: string, type: string, params: SqlValue[], columns?: SqlValue[], table?: string) {
     // const stmt = this.db.prepare(query);
     // stmt.run(params); // Primary key is the last parameter
     // stmt.free();
-    this.execFetch(query,type, params);
+    this.execFetch(query,type, params, columns,table);
   }
 
-  public execFetch(sql: string, type: string, params: SqlValue[]) {
+  public execFetch(sql: string, type: string, params: SqlValue[], columns?: SqlValue[], table?: string) {
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "http://127.0.0.1:8787/rest", false);
     xhr.setRequestHeader("Content-Type", "application/json");
@@ -145,7 +145,9 @@ export default class Sqlite {
       JSON.stringify({
         type: type,
         sql: sql,
-        params: params
+        params: params,
+        columns:columns,
+        table:table,
       })
     );
     if (xhr.status === 200) {
@@ -304,8 +306,7 @@ export default class Sqlite {
     const { clause: whereClause, params } = buildWhereClause(filters);
     const orderByClause = buildOrderByClause(sorters);
 
-    const query = `
-      SELECT ${selectClause}
+    const query = `SELECT ${selectClause}
       FROM ${quotedTable} ${whereClause} ${orderByClause}
       LIMIT ${safeLimit}
       OFFSET ${safeOffset}
@@ -367,7 +368,7 @@ export default class Sqlite {
       values = values.map((value) => (value === "" ? null : value));
 
       // Prepare and execute the query
-      this.execUpdate(query,"UPDATE", [...values, id]);
+      this.execUpdate(query,"UPDATE", [...values, id],columns,table);
 
       // Invalidate cache for this table
       tableDataCache.invalidateTable(table);
@@ -433,7 +434,7 @@ export default class Sqlite {
       // const stmt = this.db.prepare(query);
       // stmt.run([...filteredValues]);
       // stmt.free();
-      this.execUpdate(query,"INSERT", [...filteredValues]);
+      this.execUpdate(query,"INSERT", [...filteredValues],[...filteredColumns],table);
 
       // Invalidate cache for this table
       tableDataCache.invalidateTable(table);
